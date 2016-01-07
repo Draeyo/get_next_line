@@ -6,7 +6,7 @@
 /*   By: vlistrat <vlistrat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 16:07:52 by vlistrat          #+#    #+#             */
-/*   Updated: 2016/01/07 17:06:31 by vlistrat         ###   ########.fr       */
+/*   Updated: 2016/01/07 17:51:39 by vlistrat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static char		*ft_join(char *s1, char *s2)
 		ft_memcpy(c + a, s2, b);
 	c[a + b] = '\0';
 	free(s1);
-	ft_bzero(s2, BUF_SIZE + 1);
+	ft_bzero(s2, BUFF_SIZE + 1);
 	return (c);
 }
 
@@ -71,21 +71,21 @@ static int		ft_verif(char **save, char **buf, char **line)
 
 int				get_next_line(const int fd, char **line)
 {
-	static char		*save[256];// = NULL;
+	static char		*save[256];
 	char			*buf;
 	int				a;
 	int				ret;
 
-	buf = ft_strnew(BUF_SIZE);
+	buf = ft_strnew(BUFF_SIZE);
 	if (fd < 0 || (ret = read(fd, buf, 0)) < 0)
 		return (-1);
-	while ((ret = read(fd, buf, BUF_SIZE)) > 0)
+	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		a = ft_verif(&save[fd], &buf, line);
 		free(buf);
 		if (a == 1)
 			return (1);
-		buf = ft_strnew(BUF_SIZE);
+		buf = ft_strnew(BUFF_SIZE);
 	}
 	if ((a = ft_verif(&save[fd], &buf, line)))
 		return (1);
@@ -93,6 +93,7 @@ int				get_next_line(const int fd, char **line)
 	{
 		*line = ft_strdup(save[fd]);
 		ft_strdel(&save[fd]);
+		return (1);
 	}
 	return (a);
 }
