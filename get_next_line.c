@@ -6,7 +6,7 @@
 /*   By: vlistrat <vlistrat@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/01/05 16:07:52 by vlistrat          #+#    #+#             */
-/*   Updated: 2016/01/05 20:29:47 by vlistrat         ###   ########.fr       */
+/*   Updated: 2016/01/07 17:06:31 by vlistrat         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int		ft_verif(char **save, char **buf, char **line)
 
 int				get_next_line(const int fd, char **line)
 {
-	static char		*save = NULL;
+	static char		*save[256];// = NULL;
 	char			*buf;
 	int				a;
 	int				ret;
@@ -81,18 +81,18 @@ int				get_next_line(const int fd, char **line)
 		return (-1);
 	while ((ret = read(fd, buf, BUF_SIZE)) > 0)
 	{
-		a = ft_verif(&save, &buf, line);
+		a = ft_verif(&save[fd], &buf, line);
 		free(buf);
 		if (a == 1)
 			return (1);
 		buf = ft_strnew(BUF_SIZE);
 	}
-	if ((a = ft_verif(&save, &buf, line)))
+	if ((a = ft_verif(&save[fd], &buf, line)))
 		return (1);
-	else if (ft_strlen(save) > 0)
+	else if (ft_strlen(save[fd]) > 0)
 	{
-		*line = ft_strdup(save);
-		ft_strdel(&save);
+		*line = ft_strdup(save[fd]);
+		ft_strdel(&save[fd]);
 	}
 	return (a);
 }
